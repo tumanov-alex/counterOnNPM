@@ -1,0 +1,31 @@
+{
+  "name": "reduxNPM",
+  "version": "0.0.1",
+  "scripts": {
+    "babel": "babel index.js --out-file compiled.js",
+    "browserify": "browserify compiled.js -o bundle.js",
+    "webpack": "webpack",
+    "compile": "npm run browserify && webpack"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "react"
+    ]
+  },
+  "devDependencies": {
+    "babel-core": "latest",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-runtime": "^6.9.0",
+    "babel-preset-es2015": "latest",
+    "babel-preset-react": "^6.5.0",
+    "babel-preset-stage-0": "latest",
+    "babel-runtime": "^6.9.2",
+    "expect": "^1.20.1",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "redux": "^3.5.2",
+    "requirejs-babel": "0.0.9",
+    "webpack": "^1.13.1"
+  }
+}
