@@ -21,11 +21,17 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "latest",
     "babel-runtime": "^6.9.2",
+    "deep-freeze": "0.0.1",
     "expect": "^1.20.1",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "redux": "^3.5.2",
+    "redux-thunk": "^2.1.0",
     "requirejs-babel": "0.0.9",
+    "sha256": "^0.2.0",
     "webpack": "^1.13.1"
+  },
+  "dependencies": {
+    "whatwg-fetch": "^1.0.0"
   }
 }

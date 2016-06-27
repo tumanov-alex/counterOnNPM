@@ -12,7 +12,7 @@ module.exports = {
   watchOptions: {
     aggregateTimeout: 100
   },
-  devtool: NODE_ENV === 'development' ? "source-map" : null,
+  devtool: NODE_ENV === 'development' ? "cheap-module-source-map" : null,
 
   module: {
     loaders: [{
@@ -20,7 +20,7 @@ module.exports = {
       loader: 'babel',
       exclude: /node_modules/,
       query: {
-        presets: ["es2015", "stage-0"],
+        presets: ["es2015", "stage-0", "react"],
         plugins: ["transform-runtime"]
       }
     }]

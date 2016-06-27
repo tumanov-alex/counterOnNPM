@@ -1,63 +1,103 @@
-import { createStore } from 'redux'
-import React from 'react'
+import sha256 from 'sha256'
+import thunk from 'redux-thunk'
+import { createStore, combineReducers, applyMiddleware } from 'redux'
+import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 
-const counter = (state = 0, action) => {
-  switch (action.type){
-    case 'INCREMENT':
-      return ++state
-    case 'DECREMENT':
-      return --state
+const SET_SHAPES = 'SET_SHAPES',
+  BROKEN_LINK = 'BROKEN_LINK'
+
+const rootReducer = (state = [], action) => {
+  switch(action.type){
+    case SET_SHAPES:
+      return [
+        ...action.playload
+      ]
+    case BROKEN_LINK:
+      console.error('The link is broken. Error: ' + action.err)
+      return [
+        action.err
+      ]
     default:
-      return state
+      console.log('default')
   }
 }
 
-// const createStore = (reducer) => {
-//   let state
-//   let listeners = []
-//
-//   const getState = () => state
-//   const dispatch = (action) => {
-//     state = reducer(state, action)
-//     listeners.forEach(listener => listener())
-//   }
-//   const subscribe = (listener) => {
-//     listeners.push(listener)
-//     return () => {
-//       listeners = listeners.filter(l => l !== listener)
-//     }
-//   }
-//
-//   dispatch({})
-//
-//   return {getState, dispatch, subscribe}
-// }
+const store = createStore(
+  rootReducer,
+  applyMiddleware(thunk)
+)
 
-const Counter = ({
-  value,
-  onIncrement,
-  onDecrement
-}) => {
-  <div>
-    <h1>{value}</h1>
-    <button onClick={onIncrement}>+</button>
-    <button onClick={onDecrement}>-</button>
-  </div>
+// ERROR #1
+const getLink = () => {
+  return new Promise(resolve =>
+    resolve('erondondon')
+    // fetch('https://www.github.com', {mode: 'no-cors'})
+  )
 }
 
-const store = createStore(counter)
+const setShapes = (txt) => {
+  let msg = sha256(txt).replace(/\D+/g, '')
+
+  for(let i = msg.length; i > 0; i--){
+    if(msg[i] > 4 && msg[i] < 100){
+      msg = msg[i]
+      break
+    }
+  }
+
+  let arr = []
+  while(msg > 0){
+    arr.push(Math.floor(Math.random() * 99) + 1)
+    msg--
+  }
+
+  return {
+    type: SET_SHAPES,
+    playload: arr
+  }
+}
+
+const brokenLink = err => {
+  return {
+    type: BROKEN_LINK,
+    err: err
+  }
+}
+
+// ERROR #2
+const getShapes = () => {
+  return dispatch => {
+    return getLink().then(
+      link => dispatch(setShapes(link)),
+      err => dispatch(brokenLink(err))
+    ).then(
+      data => {store.dispatch(data)
+      // console.log(data)
+      }
+    )
+  }
+}
+
+store.dispatch(
+  getShapes()
+)
+
+const App = (
+  shapes
+) => (
+  <div>
+    <svg>
+      <g>
+        <circle r="50" cx="100" cy="100" fill="#333" stroke="black" />
+      </g>
+    </svg>
+  </div>
+)
+
 const render = () => {
   ReactDOM.render(
-    <Counter
-      value={store.getState()}
-      onIncrement = {() => {
-        store.dispatch({ type: 'INCREMENT' })
-      }}
-      onDecrement = {() => {
-        store.dispatch({ type: 'DECREMENT' })
-      }}
-    />,
+    <App shapes={store.getState()} />,
     document.getElementById('root')
   )
 }
