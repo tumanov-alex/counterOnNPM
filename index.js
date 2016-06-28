@@ -5,9 +5,9 @@ import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import createLogger from 'redux-logger';
 
-const logger = createLogger();
-const SET_SHAPES = 'SET_SHAPES',
-  BROKEN_LINK = 'BROKEN_LINK'
+const logger = createLogger()
+const SET_SHAPES = 'SET_SHAPES'
+const BROKEN_LINK = 'BROKEN_LINK'
 
 const rootReducer = (state = [], action) => {
   switch (action.type) {
@@ -65,10 +65,11 @@ const brokenLink = err => {
 }
 
 const sortShapes = function (){
-  console.log('in')
   return {
     type: SET_SHAPES,
-    payload: arguments[0].slice().sort()
+    payload: arguments[0].slice().sort((a, b) => {
+      return a - b
+    })
   }
 }
 
@@ -88,16 +89,24 @@ store.dispatch(
 const App = (
   props
 ) => {
-  let result,
-    sum = -190,
-    viewBox = '',
-    sortHandler = store.dispatch.bind(null, sortShapes.bind(null, props.shapes))
+  let result
+  let sum = -190
+  let viewBox = ''
+  let textSize
+  let sortHandler
+  let resetHandler = store.dispatch.bind(null, getShapes())
 
   if (props.shapes) {
     result = props.shapes.map((radius, i)=> {
       sum += radius + 200
-      return <circle key={i} r={radius} cx={sum} cy="100" fill="#333" stroke="black"><span class="radius" style={{color: 'white'}}>{radius}</span></circle>
+      textSize = radius * 1.5
+      return <g key={i}>
+        <circle r={radius} cx={sum} cy="100" fill="#333" stroke="black"></circle>
+        <text x={sum - textSize/2} y={100 + textSize/3} fill="white" style={{fontSize: textSize}}>{radius}</text>
+      </g>
     })
+
+    sortHandler = store.dispatch.bind(null, sortShapes.bind(null, props.shapes)())
   }
   sum *= 1.1
   sum = Math.abs(sum)
@@ -106,11 +115,10 @@ const App = (
   return (
     <div>
       <svg viewBox={viewBox}>
-        <g>
-          {result}
-        </g>
+        {result}
       </svg>
       <button onClick={sortHandler}>SORT</button>
+      <button onClick={resetHandler}>RESET</button>
     </div>
   )
 }
