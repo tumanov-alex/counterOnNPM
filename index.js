@@ -6,7 +6,6 @@ import ReactDOM from 'react-dom'
 import createLogger from 'redux-logger';
 
 const logger = createLogger();
-
 const SET_SHAPES = 'SET_SHAPES',
   BROKEN_LINK = 'BROKEN_LINK'
 
@@ -65,15 +64,12 @@ const brokenLink = err => {
   }
 }
 
-const sortShapes = () => {
-  // return {
-  //   type: SET_SHAPES,
-  //   payload: shapes.slice().sort()
-  // }
-
-  // CAN'T READ THE ARGUMENTS
-  console.log(arguments[0])
-  console.log(arguments[1])
+const sortShapes = function (){
+  console.log('in sortShapes')
+  return {
+    type: SET_SHAPES,
+    payload: arguments[0].slice().sort()
+  }
 }
 
 const getShapes = () => {
@@ -95,22 +91,18 @@ const App = (
   let result,
     sum = -190,
     viewBox = '',
-    sortHandler
+    sortHandler = store.dispatch.bind(null, sortShapes.bind(null, props.shapes))
+
   if (props.shapes) {
     result = props.shapes.map((radius, i)=> {
       sum += radius + 200
       return <circle key={i} r={radius} cx={sum} cy="100" fill="#333" stroke="black"><span class="radius" style={{color: 'white'}}>{radius}</span></circle>
     })
-
-    // CAN'T PASS SHAPES
-    sortHandler = sortShapes.bind(null, props.shapes)
   }
   sum *= 1.1
   sum = Math.abs(sum)
   viewBox += '0 0 ' + sum.toString() + ' 200'
 
-  // THIS IS A FULL VERSION OF A SORT HANDLER THAT I NEED
-  // let sortHandler = store.dispatch.bind(this, sortShapes.bind(this, props.shapes))
   return (
     <div>
       <svg viewBox={viewBox}>
