@@ -65,7 +65,7 @@ const brokenLink = err => {
 }
 
 const sortShapes = function (){
-  console.log('in sortShapes')
+  console.log('in')
   return {
     type: SET_SHAPES,
     payload: arguments[0].slice().sort()
@@ -91,7 +91,7 @@ const App = (
   let result,
     sum = -190,
     viewBox = '',
-    sortHandler = store.dispatch.bind(null, sortShapes.bind(null, props.shapes))
+    sortHandler = store.dispatch.bind(sortShapes.bind(null, props.shapes))
 
   if (props.shapes) {
     result = props.shapes.map((radius, i)=> {
@@ -125,3 +125,8 @@ const render = () => {
 store.subscribe(render)
 render()
 
+// const F = function(){
+//   console.log(this)
+// }
+// const F2 = F.bind('suka')
+// F2()
