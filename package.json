@@ -32,6 +32,6 @@
     "webpack": "^1.13.1"
   },
   "dependencies": {
-    "whatwg-fetch": "^1.0.0"
+    "redux-logger": "^2.6.1"
   }
 }

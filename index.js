@@ -3,58 +3,58 @@ import thunk from 'redux-thunk'
 import { createStore, combineReducers, applyMiddleware } from 'redux'
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
+import createLogger from 'redux-logger';
+
+const logger = createLogger();
 
 const SET_SHAPES = 'SET_SHAPES',
   BROKEN_LINK = 'BROKEN_LINK'
 
 const rootReducer = (state = [], action) => {
-  switch(action.type){
+  switch (action.type) {
     case SET_SHAPES:
       return [
-        ...action.playload
+        ...action.payload
       ]
     case BROKEN_LINK:
       console.error('The link is broken. Error: ' + action.err)
       return [
         action.err
       ]
-    default:
-      console.log('default')
   }
 }
 
 const store = createStore(
   rootReducer,
-  applyMiddleware(thunk)
+  applyMiddleware(thunk, logger)
 )
 
-// ERROR #1
 const getLink = () => {
-  return new Promise(resolve =>
-    resolve('erondondon')
-    // fetch('https://www.github.com', {mode: 'no-cors'})
+  return fetch('https://api.shamandev.com').then(
+    data => data.text(),
+    error => console.error(error)
   )
 }
 
 const setShapes = (txt) => {
   let msg = sha256(txt).replace(/\D+/g, '')
 
-  for(let i = msg.length; i > 0; i--){
-    if(msg[i] > 4 && msg[i] < 100){
+  for (let i = msg.length; i > 0; i--) {
+    if (msg[i] > 4 && msg[i] < 100) {
       msg = msg[i]
       break
     }
   }
 
   let arr = []
-  while(msg > 0){
+  while (msg > 0) {
     arr.push(Math.floor(Math.random() * 99) + 1)
     msg--
   }
 
   return {
     type: SET_SHAPES,
-    playload: arr
+    payload: arr
   }
 }
 
@@ -65,16 +65,22 @@ const brokenLink = err => {
   }
 }
 
-// ERROR #2
+const sortShapes = () => {
+  // return {
+  //   type: SET_SHAPES,
+  //   payload: shapes.slice().sort()
+  // }
+
+  // CAN'T READ THE ARGUMENTS
+  console.log(arguments[0])
+  console.log(arguments[1])
+}
+
 const getShapes = () => {
   return dispatch => {
     return getLink().then(
       link => dispatch(setShapes(link)),
       err => dispatch(brokenLink(err))
-    ).then(
-      data => {store.dispatch(data)
-      // console.log(data)
-      }
     )
   }
 }
@@ -84,16 +90,38 @@ store.dispatch(
 )
 
 const App = (
-  shapes
-) => (
-  <div>
-    <svg>
-      <g>
-        <circle r="50" cx="100" cy="100" fill="#333" stroke="black" />
-      </g>
-    </svg>
-  </div>
-)
+  props
+) => {
+  let result,
+    sum = -190,
+    viewBox = '',
+    sortHandler
+  if (props.shapes) {
+    result = props.shapes.map((radius, i)=> {
+      sum += radius + 200
+      return <circle key={i} r={radius} cx={sum} cy="100" fill="#333" stroke="black"><span class="radius" style={{color: 'white'}}>{radius}</span></circle>
+    })
+
+    // CAN'T PASS SHAPES
+    sortHandler = sortShapes.bind(null, props.shapes)
+  }
+  sum *= 1.1
+  sum = Math.abs(sum)
+  viewBox += '0 0 ' + sum.toString() + ' 200'
+
+  // THIS IS A FULL VERSION OF A SORT HANDLER THAT I NEED
+  // let sortHandler = store.dispatch.bind(this, sortShapes.bind(this, props.shapes))
+  return (
+    <div>
+      <svg viewBox={viewBox}>
+        <g>
+          {result}
+        </g>
+      </svg>
+      <button onClick={sortHandler}>SORT</button>
+    </div>
+  )
+}
 
 const render = () => {
   ReactDOM.render(
