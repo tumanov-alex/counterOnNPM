@@ -92,17 +92,17 @@ const App = (
   let result
   let sum = -190
   let viewBox = ''
-  let textSize
+  let fontSize
   let sortHandler
   let resetHandler = store.dispatch.bind(null, getShapes())
 
   if (props.shapes) {
     result = props.shapes.map((radius, i)=> {
       sum += radius + 200
-      textSize = radius * 1.5
+      fontSize = radius * 1.5
       return <g key={i}>
-        <circle r={radius} cx={sum} cy="100" fill="#333" stroke="black"></circle>
-        <text x={sum - textSize/2} y={100 + textSize/3} fill="white" style={{fontSize: textSize}}>{radius}</text>
+        <circle r={radius} cx={sum} cy="100" fill="#333" stroke="black" />
+        <text x={sum - fontSize/2} y={100 + fontSize/3} fill="white" style={{fontSize: fontSize}}>{radius}</text>
       </g>
     })
 

@@ -5,7 +5,9 @@
     "babel": "babel index.js --out-file compiled.js",
     "browserify": "browserify compiled.js -o bundle.js",
     "webpack": "webpack",
-    "compile": "npm run browserify && webpack"
+    "compile0": "npm run browserify && webpack",
+    "eslint": "eslint index.js index1.js",
+    "compile": "eslint && webpack"
   },
   "babel": {
     "presets": [
@@ -14,6 +16,15 @@
     ]
   },
   "devDependencies": {
+    "deep-freeze": "0.0.1",
+    "eslint": "^2.13.1",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-import": "^1.9.2",
+    "eslint-plugin-jsx-a11y": "^1.5.3",
+    "eslint-plugin-react": "^5.2.2",
+    "expect": "^1.20.1"
+  },
+  "dependencies": {
     "babel-core": "latest",
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-runtime": "^6.9.0",
@@ -21,17 +32,13 @@
     "babel-preset-react": "^6.5.0",
     "babel-preset-stage-0": "latest",
     "babel-runtime": "^6.9.2",
-    "deep-freeze": "0.0.1",
-    "expect": "^1.20.1",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
     "requirejs-babel": "0.0.9",
     "sha256": "^0.2.0",
-    "webpack": "^1.13.1"
-  },
-  "dependencies": {
+    "webpack": "^1.13.1",
     "redux-logger": "^2.6.1"
   }
 }
