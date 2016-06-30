@@ -58,13 +58,11 @@ const setShapes = (txt) => {
   };
 };
 
-// error: Unexpected block statement (arrow-body-style)
-const brokenLink = err => {
-  return {
+const brokenLink = (err) =>
+  ({
     type: BROKEN_LINK,
     err,
-  };
-};
+  });
 
 function sortShapes(...args) {
   return {
@@ -93,7 +91,10 @@ const App = (
   let sortHandler;
   let resetHandler = store.dispatch.bind(null, getShapes());
 
-  // error on every .shapes reading: 'shapes' is missing in prop validation (react/prop-types)
+  App.propTypes = {
+    shapes: React.PropTypes.array.isRequired,
+  };
+
   if (props.shapes) {
     result = props.shapes.map((radius, i) => {
       sum += radius + 200;
